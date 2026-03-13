@@ -19,9 +19,7 @@ jobs:
 
       - name: Select Xcode
         run: |
-          # List available Xcode versions
           ls /Applications/ | grep Xcode
-          # Use the latest stable Xcode
           sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
           xcodebuild -version
           swift --version
@@ -39,19 +37,22 @@ jobs:
             -scheme VoiceReader \
             -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
             -configuration Debug \
+            -derivedDataPath build \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO \
-            | xcpretty || true
+            CODE_SIGNING_ALLOWED=NO
 
-          # If xcpretty isn't available, fall back to raw output
-          if [ ${PIPESTATUS[0]} -ne 0 ]; then
-            xcodebuild build \
-              -project VoiceReader.xcodeproj \
-              -scheme VoiceReader \
-              -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
-              -configuration Debug \
-              CODE_SIGN_IDENTITY="" \
-              CODE_SIGNING_REQUIRED=NO \
-              CODE_SIGNING_ALLOWED=NO
-          fi
+      - name: Package App
+        run: |
+          APP_PATH=$(find build/Build/Products/Debug-iphonesimulator -name "*.app" -type d | head -1)
+          echo "Found app at: $APP_PATH"
+          mkdir -p artifact
+          cp -R "$APP_PATH" artifact/
+          cd artifact && zip -r ../VoiceReader-Simulator.zip *.app
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VoiceReader-Simulator
+          path: VoiceReader-Simulator.zip
+          retention-days: 30
