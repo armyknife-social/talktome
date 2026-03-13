@@ -69,7 +69,7 @@ struct VoicePickerView: View {
             } label: {
                 Image(systemName: "speaker.wave.2")
                     .font(.caption)
-                    .foregroundStyle(.accent)
+                    .foregroundStyle(Color.accentColor)
                     .frame(width: 32, height: 32)
             }
             .buttonStyle(.plain)
@@ -77,7 +77,7 @@ struct VoicePickerView: View {
             // Selection indicator
             if playerViewModel.ttsEngine.currentVoice?.identifier == voice.identifier {
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundStyle(.accent)
+                    .foregroundStyle(Color.accentColor)
             }
         }
         .contentShape(Rectangle())
