@@ -56,17 +56,74 @@ struct HighlightedTextLayout: View {
     let onTapWord: (Int) -> Void
 
     // Split into paragraphs for layout
+    // Falls back to single \n if no \n\n separators exist, and chunks very long
+    // paragraphs to avoid LazyVStack rendering issues with massive Text views
     private var paragraphs: [(text: String, offset: Int)] {
         var result: [(text: String, offset: Int)] = []
-        let parts = text.components(separatedBy: "\n\n")
-        var currentOffset = 0
 
-        for part in parts {
-            let trimmed = part.trimmingCharacters(in: .whitespacesAndNewlines)
-            if !trimmed.isEmpty {
-                result.append((text: trimmed, offset: currentOffset))
+        // Try splitting by \n\n first
+        let doubleNewlineParts = text.components(separatedBy: "\n\n")
+        let useDoubleNewline = doubleNewlineParts.count > 1
+
+        if useDoubleNewline {
+            var currentOffset = 0
+            for part in doubleNewlineParts {
+                let trimmed = part.trimmingCharacters(in: .whitespacesAndNewlines)
+                if !trimmed.isEmpty {
+                    result.append((text: trimmed, offset: currentOffset))
+                }
+                currentOffset += part.count + 2 // +2 for \n\n
             }
-            currentOffset += part.count + 2 // +2 for \n\n
+        } else {
+            // Fallback: split by single \n
+            let singleNewlineParts = text.components(separatedBy: "\n")
+            let useSingleNewline = singleNewlineParts.count > 1
+
+            if useSingleNewline {
+                var currentOffset = 0
+                for part in singleNewlineParts {
+                    let trimmed = part.trimmingCharacters(in: .whitespaces)
+                    if !trimmed.isEmpty {
+                        result.append((text: trimmed, offset: currentOffset))
+                    }
+                    currentOffset += part.count + 1 // +1 for \n
+                }
+            } else {
+                // No newlines at all — chunk into ~1000 char paragraphs at word boundaries
+                let maxChunkSize = 1000
+                if text.count <= maxChunkSize {
+                    result.append((text: text, offset: 0))
+                } else {
+                    var currentOffset = 0
+                    var remaining = text[...]
+                    while !remaining.isEmpty {
+                        if remaining.count <= maxChunkSize {
+                            let chunk = String(remaining)
+                            let trimmed = chunk.trimmingCharacters(in: .whitespaces)
+                            if !trimmed.isEmpty {
+                                result.append((text: trimmed, offset: currentOffset))
+                            }
+                            break
+                        }
+                        // Find last space within maxChunkSize
+                        let searchEnd = remaining.index(remaining.startIndex, offsetBy: maxChunkSize)
+                        let searchRange = remaining.startIndex..<searchEnd
+                        let breakPoint: String.Index
+                        if let spaceIndex = remaining[searchRange].lastIndex(of: " ") {
+                            breakPoint = remaining.index(after: spaceIndex)
+                        } else {
+                            breakPoint = searchEnd
+                        }
+                        let chunk = String(remaining[remaining.startIndex..<breakPoint])
+                        let trimmed = chunk.trimmingCharacters(in: .whitespaces)
+                        if !trimmed.isEmpty {
+                            result.append((text: trimmed, offset: currentOffset))
+                        }
+                        currentOffset += chunk.count
+                        remaining = remaining[breakPoint...]
+                    }
+                }
+            }
         }
 
         return result

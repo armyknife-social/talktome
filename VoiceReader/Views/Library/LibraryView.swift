@@ -62,6 +62,7 @@ struct LibraryView: View {
             .fullScreenCover(isPresented: $showReader) {
                 if let document = selectedDocument {
                     ReaderView(playerViewModel: playerViewModel, document: document)
+                        .environment(\.modelContext, modelContext)
                 }
             }
             .alert("Error", isPresented: $viewModel.showError) {

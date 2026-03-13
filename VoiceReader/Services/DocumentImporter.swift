@@ -59,11 +59,9 @@ final class DocumentImporter {
             pageBoundaries.append(fullText.count)
             pageNames.append("Page \(pageIndex + 1)")
 
-            if let pageText = page.string {
-                fullText += pageText
-                if !pageText.hasSuffix("\n") {
-                    fullText += "\n\n"
-                }
+            if let pageText = page.string, !pageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                fullText += pageText.trimmingCharacters(in: .whitespacesAndNewlines)
+                fullText += "\n\n"
             }
         }
 
