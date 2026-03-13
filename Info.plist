@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleName</key>
+	<string>VoiceReader</string>
+	<key>CFBundleDisplayName</key>
+	<string>VoiceReader</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+	</dict>
+	<key>NSUbiquitousContainers</key>
+	<dict>
+		<key>iCloud.com.voicereader.documents</key>
+		<dict>
+			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
+			<false/>
+			<key>NSUbiquitousContainerSupportedFolderLevels</key>
+			<string>One</string>
+			<key>NSUbiquitousContainerName</key>
+			<string>VoiceReader</string>
+		</dict>
+	</dict>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>PDF Document</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adobe.pdf</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>EPUB Document</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>org.idpf.epub-container</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>
