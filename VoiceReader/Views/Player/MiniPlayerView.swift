@@ -76,7 +76,7 @@ struct MiniPlayerView: View {
                 .frame(width: 40, height: 40)
 
             Image(systemName: playerViewModel.currentDocument?.sourceType.iconName ?? "doc.fill")
-                .foregroundStyle(.accent)
+                .foregroundStyle(Color.accentColor)
         }
     }
 }

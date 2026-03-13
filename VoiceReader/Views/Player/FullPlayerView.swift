@@ -76,7 +76,7 @@ struct FullPlayerView: View {
 
                 Image(systemName: playerViewModel.currentDocument?.sourceType.iconName ?? "doc.fill")
                     .font(.system(size: 56))
-                    .foregroundStyle(.accent)
+                    .foregroundStyle(Color.accentColor)
             }
 
             VStack(spacing: 4) {
@@ -160,7 +160,7 @@ struct FullPlayerView: View {
             } label: {
                 Image(systemName: playerViewModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                     .font(.system(size: 72))
-                    .foregroundStyle(.accent)
+                    .foregroundStyle(Color.accentColor)
             }
 
             // Skip forward
@@ -309,7 +309,7 @@ struct FullPlayerView: View {
                                 Spacer()
                                 if playerViewModel.sleepTimerMinutes == minutes {
                                     Image(systemName: "checkmark")
-                                        .foregroundStyle(.accent)
+                                        .foregroundStyle(Color.accentColor)
                                 }
                             }
                         }
