@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import AVFoundation
 
 @Observable
 final class PlayerViewModel {
@@ -171,5 +172,3 @@ final class PlayerViewModel {
         }
     }
 }
-
-import AVFoundation

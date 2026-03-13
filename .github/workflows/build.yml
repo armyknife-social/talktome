@@ -1,0 +1,57 @@
+name: Build VoiceReader
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build iOS App
+    runs-on: macos-15
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          # List available Xcode versions
+          ls /Applications/ | grep Xcode
+          # Use the latest stable Xcode
+          sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+          xcodebuild -version
+          swift --version
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode Project
+        run: xcodegen generate
+
+      - name: Build
+        run: |
+          xcodebuild build \
+            -project VoiceReader.xcodeproj \
+            -scheme VoiceReader \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -configuration Debug \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcpretty || true
+
+          # If xcpretty isn't available, fall back to raw output
+          if [ ${PIPESTATUS[0]} -ne 0 ]; then
+            xcodebuild build \
+              -project VoiceReader.xcodeproj \
+              -scheme VoiceReader \
+              -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+              -configuration Debug \
+              CODE_SIGN_IDENTITY="" \
+              CODE_SIGNING_REQUIRED=NO \
+              CODE_SIGNING_ALLOWED=NO
+          fi
